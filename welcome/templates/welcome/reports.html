@@ -16,7 +16,7 @@
             color: #2e7d32;
             margin-bottom: 20px;
         }
-        .stats-container, .workouts-container {
+        .stats-container, .workouts-container, .workout-details-container {
             margin-top: 20px;
         }
         select, button {
@@ -82,45 +82,46 @@
         <select id="muscle_group" name="muscle_group" required>
             <option value="" disabled selected>Select target muscle</option>
             {% for value, display in muscle_groups %}
-                <option value="{{ value }}">{{ display }}</option>
+                <option value="{{ value }}" {% if selected_group == value %}selected{% endif %}>{{ display }}</option>
             {% endfor %}
         </select>
         <button type="submit">Get Stats</button>
     </form>
 
-    {% if stats %}
+    {% if group_stats %}
     <div class="stats-container">
         <h2>Statistics for {{ selected_group|title }}</h2>
-        <div class="stat">Total Workouts: {{ stats.total_workouts }}</div>
-        <div class="stat">Average Calories Burned per Exercise: {{ stats.avg_calories_burned }}</div>
-        <div class="stat">Average Days per Week: {{ stats.avg_days_per_week }}</div>
-        <div class="stat">Total Calories Burned per Week: {{ stats.total_calories_per_week }}</div>
+        <div class="stat">Total Workouts: {{ group_stats.total_workouts }}</div>
+        <div class="stat">Average Calories Burned per Exercise: {{ group_stats.avg_calories_burned }}</div>
+        <div class="stat">Average Days per Week: {{ group_stats.avg_days_per_week }}</div>
+        <div class="stat">Total Calories Burned per Week: {{ group_stats.total_calories_per_week }}</div>
     </div>
 
     <div class="workouts-container">
         <h2>Workouts for {{ selected_group|title }}</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Days per Week</th>
-                    <th>Calories Burned</th>
-                </tr>
-            </thead>
-            <tbody>
+        <form method="GET" action="{% url 'reports' %}">
+            <input type="hidden" name="muscle_group" value="{{ selected_group }}">
+            <label for="workout_id">Select a Workout:</label>
+            <select id="workout_id" name="workout_id" required>
+                <option value="" disabled selected>Select a workout</option>
                 {% for workout in workouts %}
-                <tr>
-                    <td>{{ workout.name }}</td>
-                    <td>{{ workout.days_per_week }}</td>
-                    <td>{{ workout.calories_burned }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3">No workouts found for this muscle group.</td>
-                </tr>
+                    <option value="{{ workout.id }}" {% if selected_workout and selected_workout.id == workout.id %}selected{% endif %}>
+                        {{ workout.name }}
+                    </option>
                 {% endfor %}
-            </tbody>
-        </table>
+            </select>
+            <button type="submit">Get Workout Stats</button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if workout_stats %}
+    <div class="workout-details-container">
+        <h2>Stats for Workout: {{ workout_stats.name }}</h2>
+        <div class="stat">Target Muscles: {{ workout_stats.target_muscles }}</div>
+        <div class="stat">Days Per Week: {{ workout_stats.days_per_week }}</div>
+        <div class="stat">Calories Burned per Session: {{ workout_stats.calories_burned }}</div>
+        <div class="stat">Total Calories Burned Per Week: {{ workout_stats.total_calories_per_week }}</div>
     </div>
     {% endif %}
 

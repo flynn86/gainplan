@@ -149,8 +149,11 @@ def decrease_muscle_group_count(user, target_muscles):
 @login_required
 def reports(request):
     selected_group = request.GET.get('muscle_group')
-    stats = None
+    selected_workout_id = request.GET.get('workout_id')
+    group_stats = None
+    workout_stats = None
     workouts = None
+    selected_workout = None
 
     if selected_group:
         workouts = WorkoutPlan.objects.filter(user=request.user, target_muscles=selected_group)
@@ -162,13 +165,32 @@ def reports(request):
             total_calories=Sum(F('calories_burned') * F('days_per_week'))
         )['total_calories'] or 0
 
-        stats = {
+        group_stats = {
             'total_workouts': total_workouts,
             'avg_calories_burned': round(avg_calories_burned, 2),
             'avg_days_per_week': round(avg_days_per_week, 2),
             'total_calories_per_week': total_calories_per_week
         }
 
+    if selected_workout_id:
+        selected_workout = WorkoutPlan.objects.filter(user=request.user, id=selected_workout_id).first()
+
+        if selected_workout:
+            workout_stats = {
+                'name': selected_workout.name,
+                'target_muscles': selected_workout.target_muscles,
+                'days_per_week': selected_workout.days_per_week,
+                'calories_burned': selected_workout.calories_burned,
+                'total_calories_per_week': selected_workout.calories_burned * selected_workout.days_per_week
+            }
+
     muscle_groups = WorkoutPlan.MUSCLE_GROUPS
 
-    return render(request, 'welcome/reports.html', {'stats': stats, 'workouts': workouts, 'selected_group': selected_group, 'muscle_groups': muscle_groups})
+    return render(request, 'welcome/reports.html', {
+        'group_stats': group_stats,
+        'workout_stats': workout_stats,
+        'workouts': workouts,
+        'selected_group': selected_group,
+        'selected_workout': selected_workout,
+        'muscle_groups': muscle_groups
+    })

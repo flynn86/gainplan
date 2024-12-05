@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Workout Counts by Muscle Group</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 40px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+            font-weight: bold;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        .top-buttons {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .button {
+            padding: 4px 8px;
+            font-size: 0.9em;
+            border-radius: 1px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        .home-button {
+            background-color: #2e7d32;
+        }
+        .home-button:hover {
+            background-color: #1b5e20;
+        }
+        .logout-button {
+            background-color: #d9534f;
+            box-shadow: none;
+        }
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <a href="{% url 'welcome' %}" class="button home-button">Return Home</a>
+        <a href="{% url 'login' %}" class="button logout-button">Logout</a>
+    </div>
+
+    <h1>Workout Counts by Muscle Group for Each User</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Back Exercises</th>
+                <th>Chest Exercises</th>
+                <th>Biceps Exercises</th>
+                <th>Triceps Exercises</th>
+                <th>Legs Exercises</th>
+                <th>Shoulders Exercises</th>
+                <th>Core Exercises</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for count in muscle_group_counts %}
+            <tr>
+                <td>{{ count.user.username }}</td>
+                <td>{{ count.back_exercises }}</td>
+                <td>{{ count.chest_exercises }}</td>
+                <td>{{ count.biceps_exercises }}</td>
+                <td>{{ count.triceps_exercises }}</td>
+                <td>{{ count.legs_exercises }}</td>
+                <td>{{ count.shoulders_exercises }}</td>
+                <td>{{ count.core_exercises }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">No data available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

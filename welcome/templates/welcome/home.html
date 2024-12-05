@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Workout Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f4;
+            color: #333;
+            text-align: center;
+            padding-top: 60px; /* Added top padding to avoid overlap with buttons */
+        }
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        
+        /* Positioning for the top buttons */
+        .top-buttons {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .button {
+            padding: 4px 8px;
+            font-size: 0.9em;
+            border-radius: 1px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        .logout-button {
+            background-color: #d9534f;
+            box-shadow: none;
+        }
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+        .home-button {
+            background-color: #2e7d32;
+        }
+        .home-button:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Form styles */
+        form {
+            display: inline-block;
+            text-align: left;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 450px;
+            margin-bottom: 50px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #2e7d32;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            padding: 14px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Table styles */
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+            font-weight: bold;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <a href="{% url 'welcome' %}" class="button home-button">Return Home</a>
+        <a href="{% url 'login' %}" class="button logout-button">Logout</a>
+    </div>    
+
+    <h1>Create Your Workout Plan</h1>
+    {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+    {% endif %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="name">Workout Plan Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="target_muscles">Target Muscles:</label>
+        <select id="target_muscles" name="target_muscles" required>
+            <option value="" disabled selected>Select target muscle</option>
+            {% for value, display in muscle_groups %}
+                <option value="{{ value }}">{{ display }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="days_per_week">Days Per Week:</label>
+        <input type="number" id="days_per_week" name="days_per_week" min="1" max="7" required>
+
+        <label for="calories_burned">Calories Burned:</label>
+        <input type="number" id="calories_burned" name="calories_burned" min="0" max="1000" required>
+
+        <input type="submit" value="Create Workout Plan">
+    </form>
+
+    <h2>All Workout Plans</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Target Muscles</th>
+                <th>Days per Week</th>
+                <th>Calories Burned</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan in workout_plans %}
+            <tr>
+                <td>{{ plan.name }}</td>
+                <td>{{ plan.get_target_muscles_display }}</td>
+                <td>{{ plan.days_per_week }}</td>
+                <td>{{ plan.calories_burned }}</td>
+                <td>{{ plan.user.username }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No workout plans added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

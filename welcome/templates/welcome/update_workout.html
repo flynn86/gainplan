@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Workout Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 40px;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 450px;
+            margin-bottom: 50px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #2e7d32;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            padding: 14px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #1b5e20;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .top-buttons {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .button {
+            padding: 4px 8px;
+            font-size: 0.9em;
+            border-radius: 1px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        .home-button {
+            background-color: #2e7d32;
+        }
+        .home-button:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <a href="{% url 'my_workouts' %}" class="button home-button">Return</a>
+    </div> 
+
+    <h1>Update Your Workout Plan</h1>
+
+    {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+    {% endif %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="name">Workout Plan Name:</label>
+        <input type="text" id="name" name="name" value="{{ workout.name }}" required>
+
+        <label for="target_muscles">Target Muscles:</label>
+        <select id="target_muscles" name="target_muscles" required>
+            <option value="back" {% if workout.target_muscles == 'back' %}selected{% endif %}>Back</option>
+            <option value="chest" {% if workout.target_muscles == 'chest' %}selected{% endif %}>Chest</option>
+            <option value="biceps" {% if workout.target_muscles == 'biceps' %}selected{% endif %}>Biceps</option>
+            <option value="triceps" {% if workout.target_muscles == 'triceps' %}selected{% endif %}>Triceps</option>
+            <option value="legs" {% if workout.target_muscles == 'legs' %}selected{% endif %}>Legs</option>
+            <option value="shoulders" {% if workout.target_muscles == 'shoulders' %}selected{% endif %}>Shoulders</option>
+            <option value="core" {% if workout.target_muscles == 'core' %}selected{% endif %}>Core</option>
+        </select>
+
+        <label for="days_per_week">Days Per Week:</label>
+        <input type="number" id="days_per_week" name="days_per_week" value="{{ workout.days_per_week }}" min="1" max="7" required>
+
+        <label for="calories_burned">Calories Burned:</label>
+        <input type="number" id="calories_burned" name="calories_burned" value="{{ workout.calories_burned }}" min="0" max="1000" required>
+
+        <input type="submit" value="Update Workout Plan">
+    </form>
+
+</body>
+</html>

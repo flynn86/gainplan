@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Group Stats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .stats-container, .workouts-container {
+            margin-top: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 1em;
+            margin: 10px;
+        }
+        .stat, .workout-item {
+            margin: 15px;
+            font-size: 1.1em;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+        }
+        .top-buttons {
+            position: absolute;
+            width: 100%;
+            top: 10px;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .button {
+            padding: 4px 8px;
+            font-size: 0.9em;
+            border-radius: 1px;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        .home-button {
+            background-color: #2e7d32;
+        }
+        .home-button:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <a href="{% url 'welcome' %}" class="button home-button">Return Home</a>
+    </div>    
+
+    <h1>Select Muscle Group for Stats</h1>
+
+    <form method="GET" action="{% url 'reports' %}">
+        <label for="muscle_group">Muscle Group:</label>
+        <select id="muscle_group" name="muscle_group" required>
+            <option value="" disabled selected>Select target muscle</option>
+            {% for value, display in muscle_groups %}
+                <option value="{{ value }}">{{ display }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Get Stats</button>
+    </form>
+
+    {% if stats %}
+    <div class="stats-container">
+        <h2>Statistics for {{ selected_group|title }}</h2>
+        <div class="stat">Total Workouts: {{ stats.total_workouts }}</div>
+        <div class="stat">Average Calories Burned per Exercise: {{ stats.avg_calories_burned }}</div>
+        <div class="stat">Average Days per Week: {{ stats.avg_days_per_week }}</div>
+        <div class="stat">Total Calories Burned per Week: {{ stats.total_calories_per_week }}</div>
+    </div>
+
+    <div class="workouts-container">
+        <h2>Workouts for {{ selected_group|title }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Days per Week</th>
+                    <th>Calories Burned</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workout in workouts %}
+                <tr>
+                    <td>{{ workout.name }}</td>
+                    <td>{{ workout.days_per_week }}</td>
+                    <td>{{ workout.calories_burned }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No workouts found for this muscle group.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</body>
+</html>

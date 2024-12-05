@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to GainPlan</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f4;
+            color: #2e3d2e;
+            text-align: center;
+            padding: 50px;
+        }
+        img.logo {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #2e7d32;
+        }
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #2e7d32;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Add the image at the top -->
+    <img src="{% static 'welcome/images/IMG_7241.jpg' %}" alt="GainPlan Logo" class="logo">
+
+    <h1>Hello, Welcome to GainPlan!</h1>
+    <p>Your personalized workout planner is here to help you track your fitness goals and progress.</p>
+    <a href="{% url 'home' %}">Get Started with Creating Your Plan</a>
+    <a href="{% url 'my_workouts' %}">View Your Workouts</a>
+    <a href="{% url 'reports' %}">Reports</a>
+
+    
+
+</body>
+</html>

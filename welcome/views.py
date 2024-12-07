@@ -56,11 +56,11 @@ def my_workouts(request):
     for row in rows:
         workout_plans.append({
             'id': row[0],
-            'name': row[1],
-            'target_muscles': row[2],
-            'days_per_week': row[3],
-            'calories_burned': row[5],
-            'user_id': row[4],
+            'name': row[5],
+            'target_muscles': row[1],
+            'days_per_week': row[2],
+            'calories_burned': row[4],
+            'user_id': row[3],
         })
 
     return render(request, 'welcome/my_workouts.html', {'workout_plans': workout_plans})
